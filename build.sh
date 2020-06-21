@@ -13,7 +13,7 @@ if [ $1 == "debug" ];then
     make_debug
 elif [ $1 == "clean" ];then
     make clean
-else [ $1 == "rebuild" ];then
+elif [ $1 == "rebuild" ];then
     make clean
     make_debug
 else
