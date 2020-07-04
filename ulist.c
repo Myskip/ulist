@@ -3,23 +3,15 @@
 
 #include "ulist.h"
 
+
+
 static LIST_NODE *_list_node_new(void *obj, unsigned int len)
 {
-    void *_obj = malloc(len);
-    if(NULL == obj)
-    {
-        return NULL;
-    }
-
     LIST_NODE *node = (LIST_NODE *)malloc(sizeof(LIST_NODE));
     if(NULL == node)
-    {
-        free(_obj);
         return NULL;
-    }
 
-    memcpy(_obj, obj, len);
-    node->obj = _obj;
+    node->obj = obj;
     node->len = len;
     node->prev = NULL;
     node->next = NULL;
@@ -31,15 +23,12 @@ static void _list_node_destroy(LIST_NODE *node)
 {
     if(!node)
         return;
-    
-    if(node->obj)
-        free(node->obj);
         
     node->obj = NULL;
     node->len = 0;
     node->prev = NULL;
     node->next = NULL;
-    free(node);
+    SAFE_FREE(node);
 }
 
 static int _list_node_exist(LIST *list, LIST_NODE *node)
@@ -78,7 +67,6 @@ static int _list_remove_node(LIST *list, LIST_NODE *node)
     return SUCCESS;
 }
 
-
 static int _list_find(LIST *list, void *obj)
 {
     int find = FALSE;
@@ -106,15 +94,15 @@ LIST* ulist_new()
     list->head = (LIST_NODE *)malloc(sizeof(LIST_NODE));
     if(!list->head)
     {
-        free(list);
+        SAFE_FREE(list);
         return NULL;
     }
 
     list->tail = (LIST_NODE *)malloc(sizeof(LIST_NODE));
     if(!list->tail)
     {
-        free(list->head);
-        free(list);
+        SAFE_FREE(list->head);
+        SAFE_FREE(list);
         return NULL;
     }
 
@@ -139,12 +127,12 @@ int ulist_destroy(LIST *list)
     }
 
     if(list->head)
-        free(list->head);
+        SAFE_FREE(list->head);
     
     if(list->tail)
-        free(list->tail);
+        SAFE_FREE(list->tail);
 
-    free(list);
+    SAFE_FREE(list);
 
     return SUCCESS;
 }
@@ -170,7 +158,7 @@ int ulist_remove(LIST *list, void *obj)
 {
     FOR_EACH_NODE(node, list)
     {
-        if(0 == memcmp(node->obj, obj, node->len))
+        if(node->obj == obj)
         {
             return _list_remove_node(list, node);
         }

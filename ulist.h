@@ -17,6 +17,8 @@
 #define ERROR (-1)
 #endif
 
+#define SAFE_FREE(obj)   do{ if(obj) { free(obj); obj = NULL; } }while(0)
+
 typedef struct _LIST_NODE
 {
     void *obj;
@@ -44,6 +46,7 @@ typedef enum _ulist_error
 #define LIST_NODE_OBJ(node) (node->obj)
 #define LIST_NODE_OBJ_LEN(node) (node->len)
 
+/* create a ulist object, return NULL is create failed */
 LIST* ulist_new();
 int ulist_destroy(LIST *list);
 int ulist_add(LIST *list, void *obj, unsigned int obj_len);
