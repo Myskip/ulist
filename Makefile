@@ -12,6 +12,5 @@ $(OBJS):
 lib:$(OBJS)
 	$(AR) r $(LIB) $(OBJS)
 
-
 clean:
 	$(RM) r $(OBJS) $(LIB)
